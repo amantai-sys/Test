@@ -11,5 +11,8 @@
   "license": "ISC",
   "dependencies": {
     "three": "^0.160.0"
+  },
+  "devDependencies": {
+    "playwright": "^1.48.0"
   }
 }
