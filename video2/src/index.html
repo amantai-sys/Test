@@ -1,0 +1,20 @@
+<!doctype html><html><head><meta charset="utf-8"><title>Round Windows</title>
+<style>
+@font-face{font-family:Montserrat;src:url(fonts/Montserrat-Black.ttf);font-weight:900}
+@font-face{font-family:Baloo2;src:url(fonts/Baloo2-ExtraBold.ttf);font-weight:100 900}
+html,body{margin:0;background:#111}#c{display:block;height:100vh;margin:0 auto}
+</style>
+<script type="importmap">{"imports":{"three":"../node_modules/three/build/three.module.js","three/addons/":"../node_modules/three/examples/jsm/"}}</script>
+</head><body><canvas id="c"></canvas>
+<script src="lib.js"></script><script src="main.js"></script>
+<script type="module">
+import { setup } from './w3d.js';
+const [tl, ev] = await Promise.all([fetch('../build/timeline.json').then(r => r.json()), fetch('../build/events.json').then(r => r.json())]);
+await document.fonts.load('900 40px Montserrat'); await document.fonts.load('800 40px Baloo2');
+init(tl, ev); setup(); window.READY = true;
+if (!window.CAPTURE) {
+  const q = new URLSearchParams(location.search);
+  if (q.has('t')) renderAt(+q.get('t'));
+  else { const a = new Audio('../build/mix.wav'); document.body.onclick = () => a.play(); (function loop() { renderAt(a.currentTime % EV.total); requestAnimationFrame(loop); })(); }
+}
+</script></body></html>

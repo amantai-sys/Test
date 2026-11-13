@@ -2,3 +2,5 @@ video/build/
 video/src/bench.js
 video/src/gltest.js
 video/node_modules/
+video2/build/
+video2/node_modules
