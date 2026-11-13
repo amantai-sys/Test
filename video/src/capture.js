@@ -3,10 +3,10 @@
 const { chromium } = require('playwright');
 const { spawn } = require('child_process');
 const fs = require('fs'), path = require('path');
-const FPS = 60, URL = 'http://127.0.0.1:8765/src/index.html';
+const FPS = 60, URL = process.env.PAGE || 'http://127.0.0.1:8765/src/index3d.html';
 (async () => {
   const [mode, ...args] = process.argv.slice(2);
-  const browser = await chromium.launch({ args: ['--disable-gpu-vsync', '--force-color-profile=srgb'] });
+  const browser = await chromium.launch({ args: ['--disable-gpu-vsync', '--force-color-profile=srgb', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] });
   const page = await browser.newPage({ viewport: { width: 1080, height: 1920 }, deviceScaleFactor: 1 });
   page.on('console', m => { if (m.type() === 'error') console.error('PAGE:', m.text()); });
   page.on('pageerror', e => console.error('PAGEERR:', e.message));

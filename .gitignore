@@ -1,2 +1,4 @@
 video/build/
 video/src/bench.js
+video/src/gltest.js
+video/node_modules/
