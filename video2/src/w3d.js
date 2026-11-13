@@ -418,7 +418,7 @@ const SHOTS = {
     airLook(LOOK.day, { t, sunDir: [0.4, 0.7, 0.9] }); AF.ladder.visible = false; placeJet(AF.R, 900, JET_Y, 400, 0);
     const roll = easeIO(inv(0, 0.75, u)); placeJet(AF.H, lerp(-2600, -1500, roll), JET_Y, lerp(-900, 300, roll), lerp(0, 0.5, roll));
     const wp = easeIO(inv(EV.chokes + 0.25, EV.chokes + 0.6, t));
-    const p1 = path([[-1300, 400, 2400], [-900, 330, 2100]], roll), p2 = V(640, 250, 1640);
+    const p1 = path([[-2100, 330, 1500], [-1300, 300, 1900]], roll), p2 = V(640, 250, 1640);
     const t1 = AF.H.all.position.clone().add(V(0, 120, 0)), t2 = V(470, 175, 1040);
     const sh = { pos: p1.clone().lerp(p2, wp).add(hand(t)), tgt: t1.clone().lerp(t2, wp), fov: 40, focus: t2, aperture: 2 * wp };
     const spit = EV.chokes + 0.35;
@@ -515,8 +515,8 @@ const SHOTS = {
     LB.arrows.forEach((a, i) => { const q = pulse(t, EV.climbs + (i % 6) * 0.05, 0.1, 1.2) * cl; a.position.z = -400 + q * 220; a.setLength(200 + 200 * q, 80, 60); a.visible = cl > 0.05; });
     LB.lines.forEach(({ m, y0 }, i) => { const pts = [], ph = t * 0.6; const a = streamline(y0, -450, 0, 150, true), b = streamline(y0, 450, 0, 125, false); for (let j = 0; j < a.length; j++) { const x = a[j].x; pts.push(V(x, x < 0 ? a[j].y : b[j].y, 0)); } m.geometry.dispose(); m.geometry = new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 120, 4 + 2 * fl, 5); m.material.color.set(fl > 0.5 && Math.abs(y0) < 170 ? '#ffb0a0' : '#7fd0ff'); });
     LB.hot.forEach((h, i) => { const q = fl * (0.6 + 0.4 * Math.sin(t * 9 + i)); h.scale.setScalar(0.3 + q * 1.4); h.material.opacity = q; });
-    const pos = orbit([0, 0, 0], lerp(2800, 2300, k), lerp(-0.45, 0.35, k), lerp(500, 150, k)).add(hand(t));
-    return { set: 'lab', pos, tgt: V(lerp(-150, 100, k), 0, 0), fov: 40, labels: [[V(-450, 290, 40), 'SQUARE', 70, fl], [V(450, 290, 40), 'ROUND', 70, fl], [V(-450, -300, 40), 'STRESS PILES UP', 54, fl, -0.03]] };
+    const pos = orbit([0, 0, 0], lerp(3300, 2900, k), lerp(-0.35, 0.3, k), lerp(450, 150, k)).add(hand(t));
+    return { set: 'lab', pos, tgt: V(lerp(-80, 80, k), 0, 0), fov: 40, labels: [[V(-360, 200, 60), 'SQUARE', 64, fl], [V(450, 200, 60), 'ROUND', 64, fl], [V(0, -330, 60), 'STRESS PILES UP', 54, fl, -0.03]] };
   },
   // 15. analogy: hero (whole body) pulls a round-hole sheet (holds) then a square-hole sheet (rips)
   tear(t, lt, u) {
@@ -542,8 +542,8 @@ const SHOTS = {
     const sb = shake(t, EV.bursts, 40, 0.6), sw = shake(t, EV.blasts, 50, 0.7);
     const rv = V(-900, THH + 20, TD / 2 + 80);
     const toR = sstep(EV.blasts - 0.5, EV.blasts - 0.1, t);
-    const pos = V(lerp(1200, -300, sstep(EV.races, EV.bursts, t)), lerp(1300, 1000, u), 2600).lerp(rv.clone().add(V(500, 400, 1300)), toR).add(V(sb[0] + sw[0], sb[1] + sw[1], 0));
-    const tgt = V(lerp(-100, -150, u), WATER + 80, -480).lerp(rv.clone().add(V(0, 160, 0)), toR);
+    const pos = V(lerp(1200, -300, sstep(EV.races, EV.bursts, t)), lerp(1300, 1000, u), 2600).lerp(rv.clone().add(V(240, 260, 760)), toR).add(V(sb[0] + sw[0], sb[1] + sw[1], 0));
+    const tgt = V(lerp(-100, -150, u), WATER + 80, -480).lerp(rv.clone().add(V(-60, 150, -200)), toR);
     // water: geyser from the split, then a wall toward the walkway
     const list = []; if (b > 0) { const q = t - EV.bursts; for (let i = 0; i < 260; i++) { const a = rnd(i) * Math.PI * 2, v = 400 + rnd(i + 3) * 900; list.push({ p: V(-120 + Math.cos(a) * v * q * 0.5, WATER + 100 + v * q * 0.9 - 900 * q * q, -480 + Math.sin(a) * v * q * 0.4 + q * 600), s: 10 + rnd(i) * 14 }); } }
     const wq = t - EV.blasts + 0.45; if (wq > 0) { for (let i = 0; i < 300; i++) { const x = -900 + (rnd(i * 2) - 0.5) * 1500, f = clamp(wq / 0.6); list.push({ p: V(x, WATER + 300 + rnd(i + 5) * 500 * f - 300 * wq * wq, lerp(-300, TD / 2 + 250, f) + rnd(i + 7) * 120), s: 14 + rnd(i) * 18 }); } TK.wall.visible = wq < 0.9; TK.wall.position.set(-900, WATER + 260, lerp(-200, TD / 2 + 140, clamp(wq / 0.6))); TK.wall.scale.set(900, 380 * (1 - clamp((wq - 0.5) / 0.4)), 120); }
@@ -563,7 +563,7 @@ const SHOTS = {
     const sh = { set: 'cabin', pos: V(lerp(-20, 30, u), lerp(260, 220, u), lerp(-300, -820, easeIO(u))), tgt: V(lerp(60, 40, u), 140, 1300), fov: 44, roll: Math.sin(t * 1.3) * 0.02, focus: V(110, 160, 400), aperture: 2 };
     sh.people = sc => {
       const SIT = -5 - 78 * 0.72; // hips on the cushion, legs hanging in front of it
-      for (const s of CB.seats) { if (s.z > 1500 || s.z < 0) continue; if (s.z === 400 && s.sd === 1) continue; if (rnd(s.z + s.sd * 7 + s.k) < 0.35) continue; person(sc, { coat: CROWD[Math.floor(rnd(s.z + s.k) * 6)], f: s.sd > 0 ? -1 : 1, mood: rnd(s.z) > 0.5 ? 'happy' : 'neutral', arms: 'stiff', gait: 'stand' }, s.seat.position.x, SIT, s.z, 0.72, { res: 1.0, noShadow: true }); }
+      for (const s of CB.seats) { if (s.z > 1500 || s.z < camera.position.z + 520) continue; if (s.z === 400 && s.sd === 1) continue; if (rnd(s.z + s.sd * 7 + s.k) < 0.35) continue; person(sc, { coat: CROWD[Math.floor(rnd(s.z + s.k) * 6)], f: s.sd > 0 ? -1 : 1, mood: rnd(s.z) > 0.5 ? 'happy' : 'neutral', arms: 'stiff', gait: 'stand' }, s.seat.position.x, SIT, s.z, 0.72, { res: 1.0, noShadow: true }); }
       person(sc, { ...RIV, hat: undefined, f: -1, mood: 'scared', arms: 'stiff', gait: 'stand', sweat: true, sweatT: Math.round(t * 10) / 10, lean: -0.3 }, 100, SIT, 400, 0.72, { res: 1.8, noShadow: true });
     };
     sh.labels = [[V(312, 170, 440), '', 10, 0]];
